@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+
+require "rubygems"
+$: << File.join(File.dirname(__FILE__), "..", "lib")
+require "foo2bar"
+require "foo2bar/command"
+
+exit(Foo2bar::Command.run || 0)
