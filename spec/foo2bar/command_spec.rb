@@ -1,4 +1,5 @@
 require "spec_helper"
+require "foo2bar/command"
 
 describe "Foo2bar::Command" do
   context "when run without arguments" do
