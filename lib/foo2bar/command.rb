@@ -46,6 +46,16 @@ class Foo2bar::Command < Clamp::Command
     if log_level
       logger.level = log_level.to_sym
     end
+
+    validator = Validator.new(self)
+    if !validator.ok?
+      validator.messages.each do |message|
+        logger.warn(message)
+      end
+
+      logger.fatal("Fix the above problems.")
+      return 1
+    end
   end # def execute
 
   def run(*args)
@@ -54,4 +64,44 @@ class Foo2bar::Command < Clamp::Command
     super(*args)
   end # def run
 
+  class Validator
+    include Foo2bar::Util
+    private
+
+    def initialize(command)
+      @command = command
+      @valid = true
+      @messages = []
+
+      validate
+    end # def initialize
+
+    def ok?
+      return @valid
+    end # def ok?
+
+    def validate  
+      #mandatory(@command.args.any? || @command.inputs || @command.input_type == 'empty',
+      #          "No parameters given. You need to pass additional command " \
+      #          "arguments so that I know what you want to build packages " \
+      #          "from. For example, for '-s dir' you would pass a list of " \
+      #          "files and directories. For '-s gem' you would pass a one" \
+      #          " or more gems to package from. As a full example, this " \
+      #          "will make an rpm of the 'json' rubygem: " \
+      #          "`fpm -s gem -t rpm json`")
+    end # def validate
+
+    def mandatory(value, message)
+      if value.nil? or !value
+        @messages << message
+        @valid = false
+      end
+    end # def mandatory
+
+    def messages
+      return @messages
+    end # def messages
+
+    public(:initialize, :ok?, :messages)
+  end # class Validator
 end # class Foo2bar::Command
