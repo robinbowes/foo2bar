@@ -29,6 +29,8 @@ class Foo2bar::Command < Clamp::Command
   end # --log
   option "--verbose", :flag, "Enable verbose output"
   option "--debug", :flag, "Enable debug output"
+  parameter "SOURCE", "source directory"
+  parameter "DESTINATION", "destination directory"
 
   # A new FPM::Command
   def initialize(*args)
